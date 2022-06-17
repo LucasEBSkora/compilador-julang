@@ -1,0 +1,7 @@
+#include "statement.h"
+#include "AssignmentStatement.h"
+#include "DeclareArrayStatement.h"
+#include "DeclareScalarStatement.h"
+#include "DeleteStatement.h"
+#include "IfStatement.h"
+#include "WhileStatement.h"

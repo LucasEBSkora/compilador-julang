@@ -37,7 +37,7 @@
 // if your IDE can't resolve it - call make first
 #include "parser.hpp"
 
-namespace EzAquarii {
+namespace Julang {
 
 // forward declare our simplistic AST node class so we
 // can declare container for it without the header
@@ -56,7 +56,7 @@ class Command;
 class Interpreter
 {
 public:
-    Interpreter();
+    Interpreter(std::string fileName);
     
     /**
      * Run parser. Results are stored inside.
@@ -70,15 +70,11 @@ public:
     void clear();
     
     /**
-     * Print AST
-     */
-    std::string str() const;
-    
-    /**
      * Switch scanner input stream. Default is standard input (std::cin).
      * It will also reset AST.
      */
     void switchInputStream(std::istream *is);
+
     
     /**
      * This is needed so that Scanner and Parser can call some
@@ -88,20 +84,19 @@ public:
     friend class Scanner;
     
 private:
-    // Used internally by Parser to insert AST nodes.
-    void addCommand(const Command &cmd);
-    
     // Used internally by Scanner YY_USER_ACTION to update location indicator
-    void increaseLocation(unsigned int loc);
+    void increaseLocationCol(unsigned int loc);
     
     // Used to get last Scanner location. Used in error messages.
-    unsigned int location() const;
-    
+    unsigned int getLocationCol() const;
+
+    std::string* getFileName();
+
 private:
     Scanner m_scanner;
     Parser m_parser;
-    std::vector<Command> m_commands;  // Example AST
-    unsigned int m_location;          // Used by scanner
+    unsigned int m_location_col;
+    std::string fileName;
 };
 
 }

@@ -30,13 +30,29 @@
 #include "scanner.h"
 #include "parser.hpp"
 #include "interpreter.h"
+#include "Compiler.h"
 
-using namespace EzAquarii;
+using namespace Julang;
 using namespace std;
 
 int main(int argc, char **argv) {
-    Interpreter i;
+
+    if (argc != 4)
+    {
+        std::cerr << "Usage: julang <in-file> <out-file>\n"
+                  << "where in-file  is source file to compile and out-file is the name of the assembly file" << std::endl;
+        return -1;
+    }
+
+    Interpreter i{argv[2]};
+    std::ifstream file(argv[2]);
+    i.switchInputStream(&file);
     int res = i.parse();
-    cout << "Parse complete. Result = " << res << endl;
+    // if (res == 0)
+    // {
+    //     Compiler compiler{argv[3]};
+    //     res = compiler.generateCode();
+    // }
+
     return res;
 }
