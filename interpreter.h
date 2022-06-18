@@ -75,6 +75,7 @@ public:
      */
     void switchInputStream(std::istream *is);
 
+    std::vector<Statement*>& getStmts();
     
     /**
      * This is needed so that Scanner and Parser can call some
@@ -97,6 +98,7 @@ private:
     Parser m_parser;
     unsigned int m_location_col;
     std::string fileName;
+    std::vector<Statement*> stmts;
 };
 
 }

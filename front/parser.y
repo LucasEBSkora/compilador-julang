@@ -52,6 +52,7 @@
 
 %parse-param {Julang::Scanner &scanner}
 %parse-param {Julang::Interpreter &driver}
+%parse-param {std::vector<Statement*>& stmts}
 
 %locations
 %define parse.trace
@@ -117,6 +118,7 @@ program : %empty {
         }
         | program statement {
                 std::cout << $2->toString() << std::endl;
+                stmts.push_back($2);
         }
         ;
 

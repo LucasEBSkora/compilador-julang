@@ -12,7 +12,7 @@ namespace Julang
   const std::string WhileStatement::toString() const
   {
     std::stringstream ss;
-    ss << "[While" << condition->toString() << "DO:\n";
+    ss << "[WHILE " << condition->toString() << " DO:\n";
     for (Statement *stmt : *statements)
       ss << '\t' << stmt->toString() << '\n';
     ss << "]";

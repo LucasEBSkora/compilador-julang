@@ -33,7 +33,7 @@
 using namespace Julang;
 
 Interpreter::Interpreter(std::string filename) : m_scanner(*this),
-                                                 m_parser(m_scanner, *this),
+                                                 m_parser(m_scanner, *this, stmts),
                                                  m_location_col(0),
                                                  fileName{filename}
 {
@@ -55,6 +55,11 @@ void Interpreter::switchInputStream(std::istream *is)
     m_scanner.switch_streams(is, NULL);
 }
 
+std::vector<Statement *>& Interpreter::getStmts()
+{
+    return stmts;
+}
+
 void Interpreter::increaseLocationCol(unsigned int loc)
 {
     m_location_col += loc;
@@ -65,6 +70,7 @@ unsigned int Interpreter::getLocationCol() const
     return m_location_col;
 }
 
-std::string* Interpreter::getFileName() {
+std::string *Interpreter::getFileName()
+{
     return &fileName;
 }

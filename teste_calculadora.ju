@@ -1,0 +1,18 @@
+declare R3 = 0;
+declare R4 = 0;
+
+while (R3 < 30) {
+  R4 = R3 + R4;
+  R3 = R3 + 1;
+}
+
+delete R3;
+
+declare R5 = R4;
+
+delete R4;
+
+if (R5 < 100) {
+  declare A[50];
+  A[25] = 3;
+}

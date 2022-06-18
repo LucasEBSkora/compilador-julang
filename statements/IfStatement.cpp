@@ -9,7 +9,7 @@ namespace Julang
 
   const std::string IfStatement::toString() const {
     std::stringstream ss;
-    ss << "[IF" << condition->toString() << "THEN:\n";
+    ss << "[IF " << condition->toString() << " THEN:\n";
     for (Statement* stmt : *statements) 
       ss << '\t' << stmt->toString() << '\n';
     ss << "]";

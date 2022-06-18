@@ -9,7 +9,7 @@ namespace Julang
   {}
   
   const std::string DeleteStatement::toString() const {
-    return "[DELETE" + identifier + "]";
+    return "[DELETE " + identifier + "]";
   }
 
 } // namespace Julang

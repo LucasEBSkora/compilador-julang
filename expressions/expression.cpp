@@ -71,7 +71,7 @@ namespace Julang
 
   const std::string BinaryOperation::toString() const
   {
-    return '(' + lhs->toString() + ' ' + rhs->toString() + ' ' +  ')';
+    return '(' + lhs->toString() + ' ' + rhs->toString() + ' ' +  operatorToString(op) + ')';
   }
 
 

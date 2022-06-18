@@ -17,15 +17,6 @@
 	// Action is called when length of the token is known.
 	#define YY_USER_ACTION m_driver.increaseLocationCol(yyleng);
 	
-	// !!!WARNING!!!
-	// Location API is used, but the location is not initialized, 'cause I'm lazy. When making
-	// a token with make_{something} method you can pass detailed token location. Current location
-	// is accessible with m_driver.getLocationCol() method. All puzzle elements are there - just
-	// pass location value in every action code block below. I'm going to waste more time writing
-	// this excuse than putting this boilerplate below...
-	//
-	// Location class can be found in location.hh and posistion.hh files. It's just a bit too much
-	// boilerplate for this small example. Bummer.
 %}
 
 %option nodefault
@@ -42,22 +33,22 @@ identifier      [a-zA-Z\_]([a-zA-Z0-9\_])*
 "//".* {
 }
 
-DECLARE {
+declare {
     return Julang::Parser::make_DECLARE(Julang::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol())); 
 }
 
 
-DELETE {
+delete {
     return Julang::Parser::make_DELETE(Julang::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol())); 
 }
 
 
-IF {
+if {
     return Julang::Parser::make_IF(Julang::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol())); 
 }
 
 
-WHILE {
+while {
     return Julang::Parser::make_WHILE(Julang::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol())); 
 }
 

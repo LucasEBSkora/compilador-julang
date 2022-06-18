@@ -9,7 +9,7 @@ namespace Julang
   {}
   
   const std::string DeclareScalarStatement::toString() const {
-    return "[DECLARE" + identifier + (initialValue != nullptr ? ("WITH INITIAL VALUE" + initialValue->toString() ) : "") + "]";
+    return "[DECLARE " + identifier + (initialValue != nullptr ? (" WITH INITIAL VALUE " + initialValue->toString() ) : "") + "]";
   }
 
   DeclareScalarStatement::~DeclareScalarStatement() {
