@@ -61,19 +61,28 @@ namespace Julang
       Expression *index = assignment->index;
 
       std::stringstream assignment;
+      IntegerLiteral *literal = dynamic_cast<IntegerLiteral *>(index);
       if (index)
       {
-        BinaryOperation bop = BinaryOperation(new IntegerLiteral(address), SUM, index);
-        assignment << loadAccumulator(&bop);
-      }
-      else
-      {
-        assignment << generateLD(00, true, address);
-      }
-      assignment << generateLD(0b11, false, 0);
+        if (literal == nullptr || (literal && (literal->literal != 0)))
+        {
+          if (address != 0) {
+            index = new BinaryOperation(new IntegerLiteral(address), SUM, index);
+          }
+          assignment << loadAccumulator(index)
+                     << generateLD(0b11, false, 0)
+                     << loadAccumulator(value)
+                     << generateLD(0b11, false, 1);
+          if (address != 0) {
+            delete index;
+          }
+          return assignment.str();
+        }
 
+      }
       assignment << loadAccumulator(value)
-                 << generateLD(0b11, false, 1);
+                 << generateLD(0b01, false, address);
+
       return assignment.str();
     }
 
@@ -104,6 +113,10 @@ namespace Julang
       const unsigned int JumpInstructionAddress = instructionIndex++;
       for (Statement *s : *ifStmt->statements)
       {
+        if (dynamic_cast<IfStatement *>(s) || dynamic_cast<WhileStatement *>(s))
+          body << "\n/*" << s->toString() << "*/\n";
+        else
+          body << "\n//" << s->toString() << '\n';
         body << generateStmt(s);
       }
       const unsigned int jumpDestination = instructionIndex;
@@ -138,6 +151,11 @@ namespace Julang
       const unsigned int JumpInstructionAddress = instructionIndex++;
       for (Statement *s : *whileStmt->statements)
       {
+        if (dynamic_cast<IfStatement *>(s) || dynamic_cast<WhileStatement *>(s))
+          body << "/*" << s->toString() << "*/\n";
+        else
+          body << "//" << s->toString() << '\n';
+
         body << generateStmt(s);
       }
 
@@ -274,7 +292,11 @@ namespace Julang
     ArrayReference *arrayReference = dynamic_cast<ArrayReference *>(expression);
     if (arrayReference)
     {
-      return loadAccumulator(arrayReference->index) + generateLD(10, false, 0) + generateLD(10, true, 1);
+      std::stringstream ss;
+      unsigned int address = find(arrayReference->identifier).first;
+      BinaryOperation bop = BinaryOperation(new IntegerLiteral(address), SUM, arrayReference->index);
+      ss << loadAccumulator(&bop) << generateLD(0b10, false, 0) << generateLD(0b10, true, 1);
+      return ss.str();
     }
 
     BinaryOperation *binaryOperation = dynamic_cast<BinaryOperation *>(expression);
@@ -373,9 +395,8 @@ namespace Julang
     nameToAddress.emplace(identifier, pair);
     for (unsigned int i = address; i < address + size; ++i)
     {
-      addressToName[address] = identifier;
+      addressToName[i] = identifier;
     }
-
     return pair;
   }
 
@@ -615,11 +636,12 @@ namespace Julang
     return assembly.str() + '\n';
   }
 
-  std::string Assembler::generateJP(unsigned int address) {
-     std::stringstream assembly;
+  std::string Assembler::generateJP(unsigned int address)
+  {
+    std::stringstream assembly;
     std::stringstream binary;
 
-    binary << "B\"101_" << std::bitset<12>(address)  << '"';
+    binary << "B\"110_" << std::bitset<12>(address) << '"';
 
     assembly << "JP $" << address << " //" << binary.str();
     instructions.emplace(instructionIndex++, binary.str());
